@@ -6,6 +6,7 @@ void main() {
   test('detects braking when decel below threshold', () {
     final prev = Telemetry(
       ts: DateTime.now(),
+      msSinceBoot: 0,
       speedMps: 5,
       volts: 40,
       amps: 0,
@@ -18,6 +19,7 @@ void main() {
     );
     final curr = Telemetry(
       ts: prev.ts.add(const Duration(seconds: 1)),
+      msSinceBoot: 1000,
       speedMps: 4,
       volts: prev.volts,
       amps: prev.amps,
