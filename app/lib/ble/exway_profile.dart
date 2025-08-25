@@ -9,8 +9,16 @@ import '../models/commands.dart';
 class ExwayProfile implements BoardProfile {
   // TODO: Replace with real UUIDs when provided.
   static final Guid _serviceId = Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA');
-  static final Guid _telemetryChar = Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAA1');
-  static final Guid _commandChar = Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAA2');
+  static final Guid _telemetryChar =
+      Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAA1');
+  static final Guid _commandChar =
+      Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAA2');
+
+  // Lighting service UUIDs to be provided by vendor.
+  static final Guid _lightingService =
+      Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAB0B0');
+  static final Guid _lightingChar =
+      Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAB001');
 
   @override
   String get brand => 'Exway';
@@ -31,6 +39,12 @@ class ExwayProfile implements BoardProfile {
   Guid? get configChar => null;
 
   @override
+  Guid? get lightingServiceId => _lightingService;
+
+  @override
+  Guid? get lightingChar => _lightingChar;
+
+  @override
   Telemetry parseTelemetry(Uint8List bytes) {
     // TODO: parse little-endian floats from bytes according to vendor spec.
     return Telemetry(
@@ -48,8 +62,14 @@ class ExwayProfile implements BoardProfile {
   }
 
   @override
-  Future<void> encodeAndWriteCommand(
-      BluetoothDevice device, BoardCommand cmd) async {
+  Future<void> sendRiderCommand(
+      BluetoothDevice device, RiderCommand cmd) async {
     // TODO: encode JSON/CBOR into bytes and write to characteristic.
+  }
+
+  @override
+  Future<void> sendLightingCommand(
+      BluetoothDevice device, LightingCommand cmd) async {
+    // TODO: encode JSON/CBOR into bytes and write to lighting characteristic.
   }
 }

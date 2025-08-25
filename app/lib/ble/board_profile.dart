@@ -13,7 +13,23 @@ abstract class BoardProfile {
   Guid get commandChar;
   Guid? get configChar;
 
+  /// Optional lighting service for vendors that expose LED control.
+  Guid? get lightingServiceId;
+
+  /// Optional characteristic used to transmit lighting commands.
+  Guid? get lightingChar;
+
   Telemetry parseTelemetry(Uint8List bytes);
-  Future<void> encodeAndWriteCommand(
-      BluetoothDevice device, BoardCommand cmd);
+
+  /// Sends a rider control command such as mode or limits.
+  Future<void> sendRiderCommand(
+      BluetoothDevice device, RiderCommand cmd);
+
+  /// Sends a lighting command when [lightingSupported] is true.
+  Future<void> sendLightingCommand(
+      BluetoothDevice device, LightingCommand cmd);
+
+  /// Whether this profile exposes the lighting service.
+  bool get lightingSupported =>
+      lightingServiceId != null && lightingChar != null;
 }
