@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../l10n/generated/l10n.dart';
 
 class DiagnosticsScreen extends StatelessWidget {
@@ -15,6 +16,11 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.batteryHealth,
             child: Card(
               child: ListTile(
+                leading: SvgPicture.asset(
+                  'assets/icons/battery.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: Text(s.batteryHealth),
                 subtitle: const Text('SOH: 95%'),
               ),
@@ -24,6 +30,11 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.sagRisk,
             child: Card(
               child: ListTile(
+                leading: SvgPicture.asset(
+                  'assets/icons/sag_risk.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: Text(s.sagRisk),
                 subtitle: const Text('Low'),
               ),
@@ -33,6 +44,11 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.escTemps,
             child: Card(
               child: ListTile(
+                leading: SvgPicture.asset(
+                  'assets/icons/esc_temp.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: Text(s.escTemps),
                 subtitle: const Text('ETA 10m'),
               ),
@@ -42,6 +58,11 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.faultsLog,
             child: Card(
               child: ListTile(
+                leading: SvgPicture.asset(
+                  'assets/icons/fault.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: Text(s.faultsLog),
                 subtitle: const Text('No recent faults'),
               ),
@@ -51,6 +72,11 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.maintenanceTips,
             child: Card(
               child: ListTile(
+                leading: SvgPicture.asset(
+                  'assets/icons/maintenance.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: Text(s.maintenanceTips),
                 subtitle: const Text('Keep tires inflated.'),
               ),

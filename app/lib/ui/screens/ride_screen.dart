@@ -32,6 +32,7 @@ class _RideScreenState extends State<RideScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // TODO: Display speed gauge asset (e.g. assets/images/speed_gauge.png)
                 Text('${speed.toStringAsFixed(1)} m/s',
                     style: Theme.of(context).textTheme.displayMedium),
                 const SizedBox(height: 20),

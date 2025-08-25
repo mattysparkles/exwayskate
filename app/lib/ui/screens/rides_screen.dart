@@ -10,6 +10,7 @@ class RidesScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: 0,
         itemBuilder: (context, index) => const ListTile(
+          // TODO: Add ride thumbnail asset (e.g. assets/images/ride_thumbnail.png)
           title: Text('Ride'),
         ),
       ),
