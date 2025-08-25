@@ -1,0 +1,12 @@
+[
+  {
+    "model": "EXWAY_PRO",
+    "hasFirmwareUpdate": true,
+    "latestFirmware": "EX5-9.1.7"
+  },
+  {
+    "model": "EXWAY_ATLAS",
+    "hasFirmwareUpdate": true,
+    "latestFirmware": "ATLAS-2.0.3"
+  }
+]

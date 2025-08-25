@@ -1,0 +1,83 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Pub get
+        working-directory: app
+        run: flutter pub get
+      - name: Generate l10n
+        working-directory: app
+        run: flutter gen-l10n
+      - name: Analyze
+        working-directory: app
+        run: flutter analyze
+      - name: Test
+        working-directory: app
+        env:
+          XRAY_CLOUD_URL: https://example.com
+          XRAY_API_KEY: test
+        run: flutter test
+      - name: Build Android debug
+        working-directory: app
+        run: flutter build apk --debug
+      - uses: actions/upload-artifact@v3
+        with:
+          name: xray-debug.apk
+          path: app/build/app/outputs/flutter-apk/app-debug.apk
+      - name: Zip screenshots
+        run: zip -r screenshots.zip docs/screens
+      - uses: actions/upload-artifact@v3
+        with:
+          name: screenshots.zip
+          path: screenshots.zip
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Pub get
+        working-directory: app
+        run: flutter pub get
+      - name: Generate l10n
+        working-directory: app
+        run: flutter gen-l10n
+      - name: Analyze
+        working-directory: app
+        run: flutter analyze
+      - name: Test
+        working-directory: app
+        env:
+          XRAY_CLOUD_URL: https://example.com
+          XRAY_API_KEY: test
+        run: flutter test
+      - name: Build iOS
+        working-directory: app
+        run: flutter build ios --no-codesign
+      - name: Zip Runner
+        run: |
+          cd app/build/ios/iphoneos
+          zip -r xray-ios-app.zip Runner.app
+      - uses: actions/upload-artifact@v3
+        with:
+          name: xray-ios-app.zip
+          path: app/build/ios/iphoneos/xray-ios-app.zip
+      - name: Zip screenshots
+        run: zip -r screenshots.zip docs/screens
+      - uses: actions/upload-artifact@v3
+        with:
+          name: screenshots.zip
+          path: screenshots.zip
