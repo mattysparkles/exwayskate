@@ -1,0 +1,13 @@
+{
+  "devices": [
+    {
+      "type": "EXWAY_ATLAS",
+      "firmware": "ATLAS-2.0.3",
+      "BLE_UUIDS": {
+        "dfu": "00001530-1212-efde-1523-785feabcd123",
+        "control": "000036f5-0000-1000-8000-00805f9b34fb"
+      },
+      "otaSupport": true
+    }
+  ]
+}

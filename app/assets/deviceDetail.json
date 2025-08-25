@@ -1,0 +1,13 @@
+{
+  "deviceType": "EXWAY_PRO",
+  "displayName": "Exway Pro",
+  "DFU": true,
+  "usesBLE": true,
+  "bluetoothNamePrefix": "EXW",
+  "serviceUUID": "0000fee7-0000-1000-8000-00805f9b34fb",
+  "characteristics": {
+    "firmwareVersion": "000036f4-0000-1000-8000-00805f9b34fb",
+    "batteryLevel": "00002a19-0000-1000-8000-00805f9b34fb",
+    "serial": "00002a25-0000-1000-8000-00805f9b34fb"
+  }
+}
