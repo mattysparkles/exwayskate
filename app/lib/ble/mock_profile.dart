@@ -7,6 +7,7 @@ import 'board_profile.dart';
 import '../models/telemetry.dart';
 import '../models/commands.dart';
 
+/// Emits synthetic telemetry and accepts commands for development and testing.
 class MockProfile implements BoardProfile {
   double _volts = 42.0;
   double _escTemp = 30.0;
@@ -49,6 +50,7 @@ class MockProfile implements BoardProfile {
   Guid? get securityChar =>
       Guid('00000000-0000-0000-0000-00000000C001');
 
+  /// Continuously publishes fake telemetry samples to mimic a moving board.
   Stream<Telemetry> startMockStream() {
     return Stream.periodic(const Duration(milliseconds: 100), (_) {
       _ms += 100;

@@ -7,6 +7,7 @@ import 'board_profile.dart';
 import '../models/telemetry.dart';
 import '../models/commands.dart';
 
+/// Real profile for Exway boards with partial lighting/security support.
 class ExwayProfile implements BoardProfile {
   // Service and characteristic UUIDs provided by vendor.
   static final Guid _serviceId = Guid('0000fee7-0000-1000-8000-00805f9b34fb');
@@ -58,6 +59,7 @@ class ExwayProfile implements BoardProfile {
   Guid? get securityChar => _securityChar;
 
   @override
+  /// Parses binary packets emitted by the ESC into [Telemetry].
   Telemetry parseTelemetry(Uint8List bytes) {
     final bd = ByteData.sublistView(bytes);
     int offset = 0;
@@ -97,6 +99,8 @@ class ExwayProfile implements BoardProfile {
   }
 
   @override
+  /// Writes a rider control command over the primary service.
+  @override
   Future<void> sendRiderCommand(
       BluetoothDevice device, RiderCommand cmd) async {
     final data = _encodeRiderCommand(cmd);
@@ -107,6 +111,9 @@ class ExwayProfile implements BoardProfile {
     await char.write(data, withoutResponse: true);
   }
 
+  @override
+  /// Attempts to send a lighting command; falls back to logging when the
+  /// lighting service is missing.
   @override
   Future<void> sendLightingCommand(
       BluetoothDevice device, LightingCommand cmd) async {
@@ -141,6 +148,7 @@ class ExwayProfile implements BoardProfile {
     await char.write(data, withoutResponse: true);
   }
 
+  /// Serializes [RiderCommand] into the vendor JSON format.
   Uint8List _encodeRiderCommand(RiderCommand cmd) {
     Map<String, dynamic> map;
     if (cmd is SetLevel) {
@@ -160,6 +168,9 @@ class ExwayProfile implements BoardProfile {
     return Uint8List.fromList(utf8.encode(jsonEncode(map)));
   }
 
+  @override
+  /// Sends a security JSON command. Returns a mock response when not
+  /// supported by the connected board.
   @override
   Future<Map<String, dynamic>?> sendSecurityCommand(
       BluetoothDevice device, Map<String, dynamic> cmd) async {

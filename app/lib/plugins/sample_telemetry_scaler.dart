@@ -14,6 +14,8 @@ class SampleTelemetryScalerPlugin implements XrayPlugin {
   StreamSubscription<Telemetry>? _sub;
 
   @override
+  /// Listens for telemetry and prints a scaled version.
+  @override
   Future<void> init(PluginContext ctx) async {
     _sub = ctx.telemetry.listen((t) {
       final scaled = Telemetry(
@@ -34,6 +36,7 @@ class SampleTelemetryScalerPlugin implements XrayPlugin {
     });
   }
 
+  /// Cancels the stream subscription when no longer needed.
   void dispose() {
     _sub?.cancel();
   }

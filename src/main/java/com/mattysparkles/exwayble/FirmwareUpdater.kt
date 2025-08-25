@@ -12,6 +12,10 @@ import no.nordicsemi.android.dfu.DfuServiceInitiator
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper
 import java.util.UUID
 
+/**
+ * Thin wrapper around Nordic's DFU library used to update board firmware.
+ * The class exposes progress and status as [StateFlow]s for UI consumption.
+ */
 class FirmwareUpdater(private val context: Context, private val logger: BleLogger = BleLogger()) {
 
     companion object {
@@ -45,6 +49,7 @@ class FirmwareUpdater(private val context: Context, private val logger: BleLogge
         }
     }
 
+    /** Kicks off the DFU process for [address] using the provided [file]. */
     fun start(address: String, file: Uri) {
         DfuServiceListenerHelper.registerProgressListener(context, listener)
         val initiator = DfuServiceInitiator(address)
@@ -55,16 +60,19 @@ class FirmwareUpdater(private val context: Context, private val logger: BleLogge
         logger.log("DFU start: $address")
     }
 
+    /** Aborts an in‑progress update if possible. */
     fun cancel() {
         controller?.abort()
         _status.value = "cancelled"
     }
 
+    /** Sends the magic byte sequence that puts the ESC into DFU mode. */
     fun triggerDfuMode(write: (ByteArray) -> Unit) {
         write(byteArrayOf(0x01))
         logger.log("DFU mode command sent")
     }
 
+    /** Frees listener resources; call from lifecycle "onDestroy". */
     fun release() {
         DfuServiceListenerHelper.unregisterProgressListener(context, listener)
     }
