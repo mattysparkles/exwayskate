@@ -17,6 +17,9 @@ jobs:
       - name: Pub get
         working-directory: app
         run: flutter pub get
+      - name: Generate l10n
+        working-directory: app
+        run: flutter gen-l10n
       - name: Analyze
         working-directory: app
         run: flutter analyze
@@ -33,6 +36,12 @@ jobs:
         with:
           name: xray-debug.apk
           path: app/build/app/outputs/flutter-apk/app-debug.apk
+      - name: Zip screenshots
+        run: zip -r screenshots.zip docs/screens
+      - uses: actions/upload-artifact@v3
+        with:
+          name: screenshots.zip
+          path: screenshots.zip
   ios:
     runs-on: macos-latest
     steps:
@@ -43,6 +52,9 @@ jobs:
       - name: Pub get
         working-directory: app
         run: flutter pub get
+      - name: Generate l10n
+        working-directory: app
+        run: flutter gen-l10n
       - name: Analyze
         working-directory: app
         run: flutter analyze
@@ -63,3 +75,9 @@ jobs:
         with:
           name: xray-ios-app.zip
           path: app/build/ios/iphoneos/xray-ios-app.zip
+      - name: Zip screenshots
+        run: zip -r screenshots.zip docs/screens
+      - uses: actions/upload-artifact@v3
+        with:
+          name: screenshots.zip
+          path: screenshots.zip

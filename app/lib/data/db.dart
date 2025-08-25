@@ -108,6 +108,49 @@ class Badges extends Table {
   DateTimeColumn get earnedTs => dateTime().nullable()();
 }
 
+class Faults extends Table {
+  IntColumn get id => integer().autoIncrement();
+  DateTimeColumn get ts => dateTime()();
+  TextColumn get code => text()();
+  TextColumn get message => text()();
+}
+
+class PackMetrics extends Table {
+  IntColumn get id => integer().autoIncrement();
+  DateTimeColumn get ts => dateTime()();
+  RealColumn get soh => real()();
+  RealColumn get sagIndex => real()();
+}
+
+class EscMetrics extends Table {
+  IntColumn get id => integer().autoIncrement();
+  DateTimeColumn get ts => dateTime()();
+  RealColumn get tempC => real()();
+  RealColumn get etaMin => real()();
+}
+
+class CrowdSightings extends Table {
+  IntColumn get id => integer().autoIncrement();
+  TextColumn get boardHash => text()();
+  RealColumn get lat => real()();
+  RealColumn get lon => real()();
+  DateTimeColumn get ts => dateTime()();
+}
+
+class Ownership extends Table {
+  IntColumn get id => integer().autoIncrement();
+  TextColumn get boardHash => text()();
+  TextColumn get ownerKey => text()();
+  DateTimeColumn get ts => dateTime()();
+}
+
+class Audit extends Table {
+  IntColumn get id => integer().autoIncrement();
+  TextColumn get action => text()();
+  TextColumn get meta => text().nullable()();
+  DateTimeColumn get ts => dateTime()();
+}
+
 @DriftDatabase(
     tables: [
   Rides,
@@ -119,13 +162,19 @@ class Badges extends Table {
   Badges,
   CloudMeta,
   CommunityEvents,
-  Hazards
+  Hazards,
+  Faults,
+  PackMetrics,
+  EscMetrics,
+  CrowdSightings,
+  Ownership,
+  Audit
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_open());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(onCreate: (m) async {
@@ -163,6 +212,16 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(cloudMeta);
           await m.createTable(communityEvents);
           await m.createTable(hazards);
+          start = 3;
+        }
+        if (start == 3) {
+          // New diagnostics and crowd find tables
+          await m.createTable(faults);
+          await m.createTable(packMetrics);
+          await m.createTable(escMetrics);
+          await m.createTable(crowdSightings);
+          await m.createTable(ownership);
+          await m.createTable(audit);
         }
       });
   }

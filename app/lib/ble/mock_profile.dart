@@ -56,6 +56,7 @@ class MockProfile implements BoardProfile {
       _volts = math.max(30.0, _volts - 0.0005); // slow drain, clamp at 30 V
       _escTemp = math.min(100.0, _escTemp + 0.01);
       _motorTemp = math.min(120.0, _motorTemp + 0.015);
+      final fault = (_ms ~/ 5000) % 2 == 0 ? 0 : 1; // flip every 5s
       return Telemetry(
         ts: DateTime.now(),
         msSinceBoot: _ms,
@@ -67,7 +68,7 @@ class MockProfile implements BoardProfile {
         throttlePct: 60,
         brakePct: 0,
         rideMode: 1,
-        faultsBits: 0,
+        faultsBits: fault,
       );
     });
   }
