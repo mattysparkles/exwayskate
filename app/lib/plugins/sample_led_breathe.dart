@@ -9,6 +9,7 @@ class SampleLedBreathePlugin implements XrayPlugin {
   String get name => 'LED Breathe';
 
   @override
+  /// Registers a menu item and mock command handler.
   Future<void> init(PluginContext ctx) async {
     ctx.addMenuItem(PluginMenuItem(
       id: id,

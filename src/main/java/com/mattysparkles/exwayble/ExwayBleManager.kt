@@ -30,6 +30,11 @@ import com.mattysparkles.exwayble.models.SpeedTelemetry
 import com.mattysparkles.exwayble.utils.enableNotifications
 import com.mattysparkles.exwayble.utils.toHexString
 
+/**
+ * High level helper that scans for Exway skateboards, establishes a
+ * connection and exposes telemetry streams.  The class is intentionally
+ * stateful and designed for a single device connection at a time.
+ */
 class ExwayBleManager(private val context: Context, private val logger: BleLogger = BleLogger()) {
 
     companion object {
@@ -57,6 +62,11 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
 
     private val handler = Handler(Looper.getMainLooper())
 
+    /**
+     * Begins scanning for Exway devices advertising the known service UUID.
+     * The resulting [BluetoothDevice]s are emitted through a cold
+     * [kotlinx.coroutines.flow.Flow].
+     */
     fun startScan() = callbackFlow {
         if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             close(IllegalStateException("BLE not supported"))
@@ -81,6 +91,7 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         awaitClose { scanner?.stopScan(cb) }
     }
 
+    /** Connects to [device] cancelling any existing connection. */
     fun connect(device: BluetoothDevice) {
         reconnectJob?.cancel()
         gatt?.close()
@@ -88,6 +99,7 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         gatt = device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
     }
 
+    /** Terminates the active GATT connection if present. */
     fun disconnect() {
         reconnectJob?.cancel()
         gatt?.disconnect()
@@ -95,6 +107,7 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         gatt = null
     }
 
+    /** Sends a raw vendor command to the skateboard. */
     fun writeCommand(data: ByteArray) {
         val char = writeChar ?: return
         char.value = data
@@ -102,6 +115,7 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         logger.log("Write: ${data.toHexString()}")
     }
 
+    /** Core GATT callback wiring connection and notification events. */
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
@@ -128,6 +142,10 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         }
     }
 
+    /**
+     * Very small helper that decodes a vendor packet into strongly typed
+     * [SpeedTelemetry] and [BatteryStatus] models.
+     */
     private fun parseTelemetry(data: ByteArray) {
         if (data.size < 4) return
         val speed = (data[0].toInt() and 0xFF) / 10f
@@ -141,6 +159,10 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         }
     }
 
+    /**
+     * Exponential backoff reconnect used whenever the link drops.  This keeps
+     * trying until [connect] succeeds again or [close] is invoked.
+     */
     private fun scheduleReconnect(device: BluetoothDevice) {
         reconnectJob?.cancel()
         val delayMs = (1 shl reconnectAttempts).coerceAtMost(64) * 1000L
@@ -152,6 +174,7 @@ class ExwayBleManager(private val context: Context, private val logger: BleLogge
         }
     }
 
+    /** Disposes of any resources and cancels coroutines. */
     fun close() {
         disconnect()
         scope.cancel()

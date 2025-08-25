@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'ble/vendor_registry.dart';
 import 'ui/screens/connect_screen.dart';
 import 'ui/screens/ride_screen.dart';
 import 'ui/screens/rides_screen.dart';
@@ -19,6 +18,7 @@ import 'security/theft_monitor.dart';
 import 'security/crowd_find.dart';
 import 'data/db.dart';
 
+/// Entry point configuring providers and launching the Flutter app.
 void main() {
   runZonedGuarded(() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -28,10 +28,12 @@ void main() {
   });
 }
 
+/// Root widget for the mobile application.
 class XRayApp extends StatelessWidget {
   const XRayApp({super.key});
 
   @override
+  /// Wires up dependency injection and app routes.
   Widget build(BuildContext context) {
     final db = AppDatabase();
     final notif = NotificationService();

@@ -5,6 +5,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import '../models/telemetry.dart';
 import '../models/commands.dart';
 
+/// Contract that all vendor BLE profiles must implement.
 abstract class BoardProfile {
   String get brand;
   String get model;
@@ -25,6 +26,7 @@ abstract class BoardProfile {
   /// Characteristic used for security commands (JSON payloads).
   Guid? get securityChar;
 
+  /// Converts raw bytes from the board into strongly typed [Telemetry].
   Telemetry parseTelemetry(Uint8List bytes);
 
   /// Sends a rider control command such as mode or limits.
