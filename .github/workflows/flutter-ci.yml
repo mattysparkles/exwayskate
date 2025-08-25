@@ -1,0 +1,53 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Pub get
+        working-directory: app
+        run: flutter pub get
+      - name: Test
+        working-directory: app
+        run: flutter test
+      - name: Build Android debug
+        working-directory: app
+        run: flutter build apk --debug
+      - uses: actions/upload-artifact@v3
+        with:
+          name: xray-debug.apk
+          path: app/build/app/outputs/flutter-apk/app-debug.apk
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Pub get
+        working-directory: app
+        run: flutter pub get
+      - name: Test
+        working-directory: app
+        run: flutter test
+      - name: Build iOS
+        working-directory: app
+        run: flutter build ios --no-codesign
+      - name: Zip Runner
+        run: |
+          cd app/build/ios/iphoneos
+          zip -r xray-ios-app.zip Runner.app
+      - uses: actions/upload-artifact@v3
+        with:
+          name: xray-ios-app.zip
+          path: app/build/ios/iphoneos/xray-ios-app.zip
