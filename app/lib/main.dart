@@ -1,81 +1,122 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'ui/screens/connect_screen.dart';
-import 'ui/screens/ride_screen.dart';
-import 'ui/screens/rides_screen.dart';
-import 'ui/screens/modes_screen.dart';
-import 'ui/screens/updates_screen.dart';
-import 'ui/screens/settings_screen.dart';
-import 'ui/screens/diagnostics_screen.dart';
-import 'ui/screens/ownership_screen.dart';
-import 'ui/theme.dart';
-import 'l10n/generated/l10n.dart';
-import 'settings/accessibility.dart';
-import 'security/notifications.dart';
-import 'security/theft_monitor.dart';
-import 'security/crowd_find.dart';
-import 'data/db.dart';
 
-/// Entry point configuring providers and launching the Flutter app.
 void main() {
-  runZonedGuarded(() {
-    WidgetsFlutterBinding.ensureInitialized();
-    runApp(const XRayApp());
-  }, (error, stack) {
-    // Sentry would go here if DSN configured.
-  });
+  runApp(const MyApp());
 }
 
-/// Root widget for the mobile application.
-class XRayApp extends StatelessWidget {
-  const XRayApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
+        // Notice that the counter didn't reset back to zero; the application
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
 
   @override
-  /// Wires up dependency injection and app routes.
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final db = AppDatabase();
-    final notif = NotificationService();
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AccessibilitySettings()),
-        Provider(create: (_) => TheftMonitor(notif)),
-        Provider(create: (_) => CrowdFindService(db,
-            endpoint: const String.fromEnvironment('XRAY_CROWD_URL'))),
-        Provider(create: (_) => db),
-      ],
-      child: Consumer<AccessibilitySettings>(
-        builder: (context, a11y, _) {
-          return MaterialApp(
-            title: S.of(context).appTitle,
-            theme:
-                a11y.highContrast ? buildHighContrastTheme() : buildTheme(),
-            localizationsDelegates: S.localizationsDelegates,
-            supportedLocales: S.supportedLocales,
-            initialRoute: '/',
-            builder: (ctx, child) {
-              final media = MediaQuery.of(ctx);
-              return MediaQuery(
-                data: media.copyWith(
-                    textScaleFactor:
-                        media.textScaleFactor.clamp(1.0, 2.0)),
-                child: child!,
-              );
-            },
-            routes: {
-              '/': (_) => const ConnectScreen(),
-              '/ride': (_) => const RideScreen(),
-              '/rides': (_) => const RidesScreen(),
-              '/modes': (_) => const ModesScreen(),
-              '/updates': (_) => const UpdatesScreen(),
-              '/settings': (_) => const SettingsScreen(),
-              '/diagnostics': (_) => const DiagnosticsScreen(),
-              '/ownership': (_) => const OwnershipScreen(),
-            },
-          );
-        },
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text('You have pushed the button this many times:'),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

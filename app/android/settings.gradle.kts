@@ -10,9 +10,20 @@ pluginManagement {
     includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
+        // Order is fine: google() first for Android/Gradle plugins,
+        // then mavenCentral(), then Gradle portal.
         google()
         mavenCentral()
         gradlePluginPortal()
+    }
+}
+
+// Make sure all modules resolve deps from these repos
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
@@ -21,5 +32,8 @@ plugins {
     id("com.android.application") version "8.7.0" apply false
     id("org.jetbrains.kotlin.android") version "1.8.22" apply false
 }
+
+// Optional but nice to have
+rootProject.name = "xray_companion_android"
 
 include(":app")

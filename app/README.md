@@ -1,16 +1,58 @@
-# xray_companion
+# exway Companion
 
-A new Flutter project.
+A Flutter companion app for Exway electric skateboards. It connects over BLE to provide live telemetry, ride logging, rider levels, lighting control, and firmware updates. The app ships with a mock profile so you can explore the UI without hardware.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Rider levels L1–L4 with turbo and custom curves
+- Lighting commands for headlight, brake light and addressable LEDs
+- Route logging and ride analytics (speed, distance, energy)
+- Badge engine for milestones
+- Support chat and accessories shop links
+- Mock profile simulating telemetry and LED acknowledgements
+- Optional cloud backup with leaderboards
+- Local community events and crowdsourced hazards
+- Offline-first predictive range estimation
+- Lightweight watch bridge emitting JSON snapshots (`watch_stub/bridge.dart`)
+- Diagnostics with battery health, sag risk and ESC temps
+- Background theft alerts with local notifications
+- Crowd-find sightings for lost boards
+- High-contrast theme and large text support
+- Internationalization via ARB files
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Quick Start
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get && flutter run
+```
+
+By default the app starts in **Mock Mode** with synthetic telemetry. To integrate with real hardware, implement a `BoardProfile` with the vendor's GATT UUIDs and packet layout.
+
+See [PARTNER_BRIEF.md](PARTNER_BRIEF.md) and [TECH_SPEC.md](TECH_SPEC.md) for collaboration details.
+
+## Environment Variables
+
+| Key | Purpose |
+| --- | --- |
+| `XRAY_CLOUD_URL` | Base URL for ride sync APIs |
+| `XRAY_API_KEY` | Bearer token for cloud sync |
+| `XRAY_COMMUNITY_URL` | Endpoint for group ride events |
+| `XRAY_HAZARDS_URL` | Crowdsourced hazard endpoint |
+| `XRAY_PREDICT_URL` | Optional range/hazard feed aggregator |
+
+If a variable is missing the app falls back to local-only behaviour.
+
+## Wearables
+
+A lightweight JSON bridge streams telemetry for watch companions. See
+[docs/WEARABLES.md](docs/WEARABLES.md) for details and example stub widgets.
+
+## Plugin System
+
+Developers can extend the app using the static plugin API. Sample plugins are
+included under `lib/plugins`. See [PLUGINS.md](PLUGINS.md) for guidance.
+
+## Screenshots
+
+Screenshots are generated during tests and published as CI artifacts.
