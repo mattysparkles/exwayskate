@@ -12,6 +12,10 @@ class Rides extends Table {
   RealColumn get maxSpeed => real().withDefault(const Constant(0))();
   RealColumn get energyWh => real().withDefault(const Constant(0))();
   TextColumn get notes => text().nullable()();
+  TextColumn get cloudStatus =>
+      text().withDefault(const Constant('pending'))();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
 }
 
 class Samples extends Table {
@@ -46,6 +50,51 @@ class MileageTotals extends Table {
   RealColumn get totalMiles => real().withDefault(const Constant(0))();
 }
 
+class CloudMeta extends Table {
+  TextColumn get key => text()();
+  TextColumn get value => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {key};
+}
+
+class CommunityEvents extends Table {
+  TextColumn get id => text()();
+  TextColumn get title => text()();
+  DateTimeColumn get startTs => dateTime()();
+  DateTimeColumn get endTs => dateTime()();
+  TextColumn get locationName => text().nullable()();
+  RealColumn get lat => real().nullable()();
+  RealColumn get lon => real().nullable()();
+  TextColumn get description => text().nullable()();
+  TextColumn get createdByHash => text()();
+  TextColumn get cloudStatus =>
+      text().withDefault(const Constant('pending'))();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class Hazards extends Table {
+  TextColumn get id => text()();
+  TextColumn get type => text()();
+  DateTimeColumn get ts => dateTime()();
+  RealColumn get lat => real()();
+  RealColumn get lon => real()();
+  IntColumn get severity => integer()();
+  TextColumn get note => text().nullable()();
+  TextColumn get createdByHash => text()();
+  TextColumn get cloudStatus =>
+      text().withDefault(const Constant('pending'))();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 class FirmwareHistory extends Table {
   IntColumn get id => integer().autoIncrement();
   TextColumn get version => text()();
@@ -67,13 +116,16 @@ class Badges extends Table {
   Routes,
   MileageTotals,
   FirmwareHistory,
-  Badges
+  Badges,
+  CloudMeta,
+  CommunityEvents,
+  Hazards
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_open());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(onCreate: (m) async {
@@ -88,7 +140,8 @@ class AppDatabase extends _$AppDatabase {
           ]);
         });
       }, onUpgrade: (m, from, to) async {
-        if (from == 1) {
+        var start = from;
+        if (start == 1) {
           await m.createTable(routes);
           await m.createTable(mileageTotals);
           await m.createTable(firmwareHistory);
@@ -102,9 +155,17 @@ class AppDatabase extends _$AppDatabase {
               BadgesCompanion.insert(key: 'night_rider'),
             ]);
           });
+          start = 2;
+        }
+        if (start == 2) {
+          await m.addColumn(rides, rides.cloudStatus);
+          await m.addColumn(rides, rides.updatedAt);
+          await m.createTable(cloudMeta);
+          await m.createTable(communityEvents);
+          await m.createTable(hazards);
         }
       });
-}
+  }
 
 LazyDatabase _open() {
   return LazyDatabase(() async {
