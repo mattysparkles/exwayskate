@@ -8,20 +8,20 @@ import '../models/telemetry.dart';
 import '../models/commands.dart';
 
 class ExwayProfile implements BoardProfile {
-  // TODO: Replace with real UUIDs when provided.
-  static final Guid _serviceId = Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA');
+  // Service and characteristic UUIDs provided by vendor.
+  static final Guid _serviceId = Guid('0000fee7-0000-1000-8000-00805f9b34fb');
   static final Guid _telemetryChar =
-      Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAA1');
+      Guid('000036f6-0000-1000-8000-00805f9b34fb');
   static final Guid _commandChar =
-      Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAA2');
+      Guid('000036f5-0000-1000-8000-00805f9b34fb');
 
-  // Lighting service UUIDs to be provided by vendor.
+  // Lighting service UUIDs (mock placeholders until vendor provides real ones).
   static final Guid _lightingService =
       Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAB0B0');
   static final Guid _lightingChar =
       Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAB001');
 
-  // Security service (placeholder UUIDs).
+  // Security service (mock placeholders).
   static final Guid _securityService =
       Guid('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAC0C0');
   static final Guid _securityChar =
@@ -112,10 +112,32 @@ class ExwayProfile implements BoardProfile {
       BluetoothDevice device, LightingCommand cmd) async {
     final data = Uint8List.fromList(utf8.encode(jsonEncode(cmd.toJson())));
     final services = await device.discoverServices();
-    final service =
-        services.firstWhere((s) => s.uuid == lightingServiceId);
-    final char =
-        service.characteristics.firstWhere((c) => c.uuid == lightingChar);
+
+    BluetoothService? service;
+    for (final s in services) {
+      if (s.uuid == lightingServiceId) {
+        service = s;
+        break;
+      }
+    }
+    if (service == null) {
+      // Mock response when lighting service is unavailable.
+      print('Mock lighting command: ${jsonEncode(cmd.toJson())}');
+      return;
+    }
+
+    BluetoothCharacteristic? char;
+    for (final c in service.characteristics) {
+      if (c.uuid == lightingChar) {
+        char = c;
+        break;
+      }
+    }
+    if (char == null) {
+      print('Mock lighting command: ${jsonEncode(cmd.toJson())}');
+      return;
+    }
+
     await char.write(data, withoutResponse: true);
   }
 
@@ -143,9 +165,31 @@ class ExwayProfile implements BoardProfile {
       BluetoothDevice device, Map<String, dynamic> cmd) async {
     final data = Uint8List.fromList(utf8.encode(jsonEncode(cmd)));
     final services = await device.discoverServices();
-    final service =
-        services.firstWhere((s) => s.uuid == securityServiceId);
-    final char = service.characteristics.firstWhere((c) => c.uuid == securityChar);
+
+    BluetoothService? service;
+    for (final s in services) {
+      if (s.uuid == securityServiceId) {
+        service = s;
+        break;
+      }
+    }
+    if (service == null) {
+      print('Mock security command: ${jsonEncode(cmd)}');
+      return {'status': 'mock'};
+    }
+
+    BluetoothCharacteristic? char;
+    for (final c in service.characteristics) {
+      if (c.uuid == securityChar) {
+        char = c;
+        break;
+      }
+    }
+    if (char == null) {
+      print('Mock security command: ${jsonEncode(cmd)}');
+      return {'status': 'mock'};
+    }
+
     await char.write(data, withoutResponse: true);
     return null; // no response expected by default
   }

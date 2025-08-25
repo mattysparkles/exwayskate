@@ -1,0 +1,6 @@
+{
+  "dfuEnabled": true,
+  "otaCheckFrequency": "startup",
+  "forceUpdate": false,
+  "supportedModels": ["EXWAY_PRO", "EXWAY_ATLAS"]
+}

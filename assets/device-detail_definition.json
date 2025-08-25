@@ -1,0 +1,15 @@
+{
+  "defaultFirmware": "EX5-9.1.7",
+  "defaultBLE": "ble_config",
+  "ota": true,
+  "serviceUUID": "0000fee7-0000-1000-8000-00805f9b34fb",
+  "writeUUID": "000036f5-0000-1000-8000-00805f9b34fb",
+  "notifyUUID": "000036f6-0000-1000-8000-00805f9b34fb",
+  "readUUID": "000036f6-0000-1000-8000-00805f9b34fb",
+  "firmware": [
+    {
+      "type": "update",
+      "file": "firmware/EX5-9.1.7.zip"
+    }
+  ]
+}

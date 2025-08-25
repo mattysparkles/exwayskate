@@ -32,3 +32,9 @@ dev_dependencies:
   test: ^1.24.0
 flutter:
   uses-material-design: true
+  assets:
+    - ../assets/device-detail_definition.json
+    - ../assets/deviceDetail.json
+    - ../assets/kit_dependence/DeviceKit.json
+    - ../assets/dynamic_config.json
+    - ../assets/configList.json
