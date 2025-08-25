@@ -25,7 +25,7 @@ class DiagnosticsScreen extends StatelessWidget {
                 subtitle: const Text('SOH: 95%'),
               ),
             ),
-          ),
+          )
           Semantics(
             label: s.sagRisk,
             child: Card(
