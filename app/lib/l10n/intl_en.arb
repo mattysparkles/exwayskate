@@ -1,0 +1,16 @@
+{
+  "appTitle": "X-Ray",
+  "diagnostics": "Diagnostics",
+  "batteryHealth": "Battery Health",
+  "sagRisk": "Sag Risk",
+  "escTemps": "ESC Temps",
+  "faultsLog": "Faults Log",
+  "maintenanceTips": "Maintenance Tips",
+  "settings": "Settings",
+  "accessibility": "Accessibility",
+  "highContrast": "High Contrast",
+  "developer": "Developer",
+  "simulateTheftPing": "Simulate theft ping",
+  "generateMockSighting": "Generate mock sighting",
+  "lastSeenNear": "Last seen near"
+}

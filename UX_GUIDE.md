@@ -6,6 +6,8 @@
 - Accessibility considered with large type and contrast
 - Every interactive control exposes a long‑press or `?` tooltip with plain
   language guidance
+- High contrast mode lives under Settings → Accessibility
+- Key widgets expose `semanticsLabel` for screen readers
 - LEDs screen provides headlight and brake light toggles with live preview
 
 ## Leaderboards

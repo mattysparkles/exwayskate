@@ -14,6 +14,11 @@ A Flutter companion app for Exway electric skateboards. It connects over BLE to 
 - Local community events and crowdsourced hazards
 - Offline-first predictive range estimation
 - Lightweight watch bridge emitting JSON snapshots (`watch_stub/bridge.dart`)
+- Diagnostics with battery health, sag risk and ESC temps
+- Background theft alerts with local notifications
+- Crowd-find sightings for lost boards
+- High-contrast theme and large text support
+- Internationalization via ARB files
 
 
 ## Quick Start
@@ -47,3 +52,7 @@ A lightweight JSON bridge streams telemetry for watch companions. See
 
 Developers can extend the app using the static plugin API. Sample plugins are
 included under `lib/plugins`. See [PLUGINS.md](PLUGINS.md) for guidance.
+
+## Screenshots
+
+Screenshots are generated during tests and published as CI artifacts.
