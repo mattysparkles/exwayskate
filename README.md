@@ -37,3 +37,13 @@ See [PARTNER_BRIEF.md](PARTNER_BRIEF.md) and [TECH_SPEC.md](TECH_SPEC.md) for co
 | `XRAY_PREDICT_URL` | Optional range/hazard feed aggregator |
 
 If a variable is missing the app falls back to local-only behaviour.
+
+## Wearables
+
+A lightweight JSON bridge streams telemetry for watch companions. See
+[docs/WEARABLES.md](docs/WEARABLES.md) for details and example stub widgets.
+
+## Plugin System
+
+Developers can extend the app using the static plugin API. Sample plugins are
+included under `lib/plugins`. See [PLUGINS.md](PLUGINS.md) for guidance.
