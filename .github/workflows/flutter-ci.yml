@@ -17,8 +17,14 @@ jobs:
       - name: Pub get
         working-directory: app
         run: flutter pub get
+      - name: Analyze
+        working-directory: app
+        run: flutter analyze
       - name: Test
         working-directory: app
+        env:
+          XRAY_CLOUD_URL: https://example.com
+          XRAY_API_KEY: test
         run: flutter test
       - name: Build Android debug
         working-directory: app
@@ -37,8 +43,14 @@ jobs:
       - name: Pub get
         working-directory: app
         run: flutter pub get
+      - name: Analyze
+        working-directory: app
+        run: flutter analyze
       - name: Test
         working-directory: app
+        env:
+          XRAY_CLOUD_URL: https://example.com
+          XRAY_API_KEY: test
         run: flutter test
       - name: Build iOS
         working-directory: app

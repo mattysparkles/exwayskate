@@ -38,7 +38,8 @@
 - Outputs: sunrise and sunset in local time
 
 ## Database Schema
-Tables: rides, samples, alerts, routes, mileage_totals, firmware_history, badges.
+Tables: rides, samples, alerts, routes, mileage_totals, firmware_history, badges,
+cloud_meta, community_events, hazards.
 Default badges seeded on first run.
 
 ## Safety Heuristics
@@ -46,3 +47,17 @@ Simple thermal headroom and voltage sag estimators.
 
 ## OTA Notes
 Uses Nordic DFU / MCUBoot when vendor provides details.
+
+## CloudSync Protocol
+- Base URL provided by `XRAY_CLOUD_URL`
+- Auth header `Authorization: Bearer <XRAY_API_KEY>`
+- `POST /rides` with `[RideDTO]`
+- `GET /rides?since=cursor` returns `[RideDTO]` and `cursor`
+- `GET /leaderboard?period=30d` returns `[LeaderboardEntryDTO]`
+
+### DTOs
+See `lib/cloud/dto.dart` for `RideDTO`, `UserDTO`, and `LeaderboardEntryDTO`.
+
+## Range Model
+Remaining range = `batteryWh / whPerKm`.
+Each 3% uphill grade adds ~15% Wh/km; downhill reduces by 10% per 3%.
