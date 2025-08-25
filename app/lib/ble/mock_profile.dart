@@ -50,12 +50,12 @@ class MockProfile implements BoardProfile {
       Guid('00000000-0000-0000-0000-00000000C001');
 
   Stream<Telemetry> startMockStream() {
-    return Stream.periodic(const Duration(milliseconds: 100), (i) {
-      final t = i / 10.0;
+    return Stream.periodic(const Duration(milliseconds: 100), (_) {
       _ms += 100;
-      _volts -= 0.0005; // slow drain
-      _escTemp += 0.01;
-      _motorTemp += 0.015;
+      final t = _ms / 1000.0;
+      _volts = math.max(30.0, _volts - 0.0005); // slow drain, clamp at 30 V
+      _escTemp = math.min(100.0, _escTemp + 0.01);
+      _motorTemp = math.min(120.0, _motorTemp + 0.015);
       return Telemetry(
         ts: DateTime.now(),
         msSinceBoot: _ms,
@@ -74,14 +74,13 @@ class MockProfile implements BoardProfile {
 
   @override
   Telemetry parseTelemetry(Uint8List bytes) {
-    final now = DateTime.now();
     _ms += 100;
     final t = _ms / 1000.0;
-    _volts -= 0.0005;
-    _escTemp += 0.01;
-    _motorTemp += 0.015;
+    _volts = math.max(30.0, _volts - 0.0005);
+    _escTemp = math.min(100.0, _escTemp + 0.01);
+    _motorTemp = math.min(120.0, _motorTemp + 0.015);
     return Telemetry(
-      ts: now,
+      ts: DateTime.now(),
       msSinceBoot: _ms,
       speedMps: 8 + 2 * math.sin(t),
       volts: _volts,

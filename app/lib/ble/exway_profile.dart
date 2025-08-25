@@ -61,23 +61,25 @@ class ExwayProfile implements BoardProfile {
   Telemetry parseTelemetry(Uint8List bytes) {
     final bd = ByteData.sublistView(bytes);
     int offset = 0;
+
     final ms = bd.getUint32(offset, Endian.little);
     offset += 4;
-    double _f32() {
+
+    double readF32() {
       final v = bd.getFloat32(offset, Endian.little);
       offset += 4;
       return v;
     }
 
-    final speed = _f32();
-    final volts = _f32();
-    final amps = _f32();
-    final esc = _f32();
-    final motor = _f32();
-    final throttle = _f32();
-    final brake = _f32();
+    final speed = readF32();
+    final volts = readF32();
+    final amps = readF32();
+    final esc = readF32();
+    final motor = readF32();
+    final throttle = readF32();
+    final brake = readF32();
     final rideMode = bd.getUint8(offset++);
-    final faults = bd.getUint8(offset);
+    final faults = bd.getUint8(offset++);
 
     return Telemetry(
       ts: DateTime.now(),
