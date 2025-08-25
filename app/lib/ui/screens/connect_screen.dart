@@ -16,6 +16,7 @@ class ConnectScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // TODO: Add illustration asset (e.g. assets/images/no_connection.png)
             const Text('No boards connected'),
             const SizedBox(height: 16),
             ElevatedButton(

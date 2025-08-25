@@ -10,6 +10,7 @@ class OwnershipScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Ownership')),
       body: Center(
+        // TODO: Add location/map icon (e.g. assets/icons/location.svg)
         child: Text('${s.lastSeenNear} Main St'),
       ),
     );

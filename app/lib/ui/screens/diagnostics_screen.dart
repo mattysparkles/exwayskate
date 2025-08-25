@@ -15,6 +15,7 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.batteryHealth,
             child: Card(
               child: ListTile(
+                // TODO: Add battery icon asset (e.g. assets/icons/battery.svg)
                 title: Text(s.batteryHealth),
                 subtitle: const Text('SOH: 95%'),
               ),
@@ -24,6 +25,7 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.sagRisk,
             child: Card(
               child: ListTile(
+                // TODO: Add voltage sag icon (e.g. assets/icons/sag_risk.svg)
                 title: Text(s.sagRisk),
                 subtitle: const Text('Low'),
               ),
@@ -33,6 +35,7 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.escTemps,
             child: Card(
               child: ListTile(
+                // TODO: Add temperature icon (e.g. assets/icons/esc_temp.svg)
                 title: Text(s.escTemps),
                 subtitle: const Text('ETA 10m'),
               ),
@@ -42,6 +45,7 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.faultsLog,
             child: Card(
               child: ListTile(
+                // TODO: Add fault log icon (e.g. assets/icons/fault.svg)
                 title: Text(s.faultsLog),
                 subtitle: const Text('No recent faults'),
               ),
@@ -51,6 +55,7 @@ class DiagnosticsScreen extends StatelessWidget {
             label: s.maintenanceTips,
             child: Card(
               child: ListTile(
+                // TODO: Add maintenance icon (e.g. assets/icons/maintenance.svg)
                 title: Text(s.maintenanceTips),
                 subtitle: const Text('Keep tires inflated.'),
               ),

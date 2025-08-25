@@ -8,6 +8,7 @@ class UpdatesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Updates')),
       body: const Center(
+        // TODO: Add firmware update illustration (e.g. assets/images/update.png)
         child: Text('Firmware update coming soon.'),
       ),
     );
