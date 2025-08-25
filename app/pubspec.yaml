@@ -23,6 +23,7 @@ dependencies:
   cryptography: ^2.5.0
   shared_preferences: ^2.2.2
   http: ^1.1.0
+  flutter_svg: ^2.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -38,3 +39,5 @@ flutter:
     - ../assets/kit_dependence/DeviceKit.json
     - ../assets/dynamic_config.json
     - ../assets/configList.json
+    - ../assets/icons/
+    - ../assets/images/

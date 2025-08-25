@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../settings/accessibility.dart';
@@ -19,33 +20,57 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            // TODO: Add diagnostics icon (e.g. assets/icons/diagnostics.svg)
+            leading: SvgPicture.asset(
+              'assets/icons/diagnostics.svg',
+              width: 24,
+              height: 24,
+            ),
             title: Text(s.diagnostics),
             onTap: () => Navigator.of(context).pushNamed('/diagnostics'),
           ),
           const Divider(),
           ListTile(
-            // TODO: Add accessibility icon (e.g. assets/icons/accessibility.svg)
+            leading: SvgPicture.asset(
+              'assets/icons/accessibility.svg',
+              width: 24,
+              height: 24,
+            ),
             title: Text(s.accessibility),
           ),
           SwitchListTile(
-            // TODO: Add high-contrast icon (e.g. assets/icons/contrast.svg)
+            secondary: SvgPicture.asset(
+              'assets/icons/contrast.svg',
+              width: 24,
+              height: 24,
+            ),
             title: Text(s.highContrast),
             value: a11y.highContrast,
             onChanged: (v) => a11y.setHighContrast(v),
           ),
           const Divider(),
           ListTile(
-            // TODO: Add developer icon (e.g. assets/icons/developer.svg)
+            leading: SvgPicture.asset(
+              'assets/icons/developer.svg',
+              width: 24,
+              height: 24,
+            ),
             title: Text(s.developer),
           ),
           ListTile(
-            // TODO: Add theft ping icon (e.g. assets/icons/theft_ping.svg)
+            leading: SvgPicture.asset(
+              'assets/icons/theft_ping.svg',
+              width: 24,
+              height: 24,
+            ),
             title: Text(s.simulateTheftPing),
             onTap: () => theft.simulatePing(),
           ),
           ListTile(
-            // TODO: Add crowd find icon (e.g. assets/icons/crowd_find.svg)
+            leading: SvgPicture.asset(
+              'assets/icons/crowd_find.svg',
+              width: 24,
+              height: 24,
+            ),
             title: Text(s.generateMockSighting),
             onTap: () => crowd.addSighting('MOCK', 37.0, -122.0),
           ),

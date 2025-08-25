@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../l10n/generated/l10n.dart';
 
 class OwnershipScreen extends StatelessWidget {
@@ -10,8 +11,18 @@ class OwnershipScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Ownership')),
       body: Center(
-        // TODO: Add location/map icon (e.g. assets/icons/location.svg)
-        child: Text('${s.lastSeenNear} Main St'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/location.svg',
+              width: 24,
+              height: 24,
+            ),
+            const SizedBox(height: 8),
+            Text('${s.lastSeenNear} Main St'),
+          ],
+        ),
       ),
     );
   }
