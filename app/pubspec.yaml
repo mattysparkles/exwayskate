@@ -17,6 +17,8 @@ dependencies:
   sentry_flutter: ^7.19.0
   collection: ^1.18.0
   crypto: ^3.0.3
+  cryptography: ^2.5.0
+  shared_preferences: ^2.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

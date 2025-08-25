@@ -8,6 +8,13 @@ import '../models/telemetry.dart';
 import '../models/commands.dart';
 
 class MockProfile implements BoardProfile {
+  double _volts = 42.0;
+  double _escTemp = 30.0;
+  double _motorTemp = 35.0;
+  int _ms = 0;
+  String lockState = 'unlocked';
+  String? boundOpk;
+
   @override
   String get brand => 'Demo';
 
@@ -34,16 +41,29 @@ class MockProfile implements BoardProfile {
   Guid? get lightingChar =>
       Guid('00000000-0000-0000-0000-00000000B001');
 
+  @override
+  Guid? get securityServiceId =>
+      Guid('00000000-0000-0000-0000-00000000C0C0');
+
+  @override
+  Guid? get securityChar =>
+      Guid('00000000-0000-0000-0000-00000000C001');
+
   Stream<Telemetry> startMockStream() {
     return Stream.periodic(const Duration(milliseconds: 100), (i) {
       final t = i / 10.0;
+      _ms += 100;
+      _volts -= 0.0005; // slow drain
+      _escTemp += 0.01;
+      _motorTemp += 0.015;
       return Telemetry(
         ts: DateTime.now(),
+        msSinceBoot: _ms,
         speedMps: 8 + 2 * math.sin(t),
-        volts: 41.8,
+        volts: _volts,
         amps: 12 + 6 * math.cos(t),
-        escTempC: 50 + t,
-        motorTempC: 55 + t,
+        escTempC: _escTemp,
+        motorTempC: _motorTemp,
         throttlePct: 60,
         brakePct: 0,
         rideMode: 1,
@@ -55,14 +75,19 @@ class MockProfile implements BoardProfile {
   @override
   Telemetry parseTelemetry(Uint8List bytes) {
     final now = DateTime.now();
-    final t = now.millisecond / 1000.0;
+    _ms += 100;
+    final t = _ms / 1000.0;
+    _volts -= 0.0005;
+    _escTemp += 0.01;
+    _motorTemp += 0.015;
     return Telemetry(
       ts: now,
+      msSinceBoot: _ms,
       speedMps: 8 + 2 * math.sin(t),
-      volts: 41.8,
+      volts: _volts,
       amps: 12 + 6 * math.cos(t),
-      escTempC: 50 + t,
-      motorTempC: 55 + t,
+      escTempC: _escTemp,
+      motorTempC: _motorTemp,
       throttlePct: 60,
       brakePct: 0,
       rideMode: 1,
@@ -81,5 +106,33 @@ class MockProfile implements BoardProfile {
   Future<void> sendLightingCommand(
       BluetoothDevice device, LightingCommand cmd) async {
     await Future<void>.delayed(const Duration(milliseconds: 10));
+  }
+
+  @override
+  Future<Map<String, dynamic>?> sendSecurityCommand(
+      BluetoothDevice device, Map<String, dynamic> cmd) async {
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+    switch (cmd['cmd']) {
+      case 'identify':
+        return {
+          'board_id': 'MOCK-BOARD',
+          'fw': '0.0.1',
+          'secure_elem': false,
+          'lock_state': lockState,
+          'opk': boundOpk,
+        };
+      case 'bind_owner':
+        boundOpk = cmd['opk'];
+        lockState = 'unlocked';
+        return {'status': 'ok'};
+      case 'set_lock':
+        lockState = cmd['state'];
+        return {'status': 'ok'};
+      case 'challenge':
+        final nonce = 'nonce_${DateTime.now().millisecondsSinceEpoch}';
+        return {'nonce': nonce};
+      default:
+        return {'status': 'unknown'};
+    }
   }
 }
