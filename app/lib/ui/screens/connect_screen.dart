@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import '../../settings/app_settings.dart';
 
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
@@ -14,16 +16,14 @@ class _ConnectScreenState extends State<ConnectScreen> {
   bool _scanning = false;
 
   Future<bool> _ensureBlePermissions(BuildContext context) async {
+    if (context.read<AppSettings>().demoMode) return true;
     final statuses = await [
       Permission.bluetoothScan,
       Permission.bluetoothConnect,
-      Permission.locationWhenInUse, // needed for pre-Android 12 scanning
-      Permission.notification,      // optional (alerts)
+      Permission.locationWhenInUse,
+      Permission.notification,
     ].request();
-
-    // FIX: check the values of the returned Map
-    final granted = statuses.values.every((status) => status.isGranted || status.isLimited);
-
+    final granted = statuses.values.every((s) => s.isGranted || s.isLimited);
     if (!granted && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Permissions are required to scan/connect')),
