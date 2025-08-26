@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../l10n/generated/l10n.dart';
+import '../bottom_nav_scaffold.dart';
 
 class DiagnosticsScreen extends StatelessWidget {
   const DiagnosticsScreen({super.key});
@@ -8,81 +9,30 @@ class DiagnosticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(s.diagnostics)),
+    return BottomNavScaffold(
+      index: 3,
+      title: s.diagnostics,
       body: ListView(
         children: [
-          Semantics(
-            label: s.batteryHealth,
-            child: Card(
-              child: ListTile(
-                leading: SvgPicture.asset(
-                  'assets/icons/battery.svg',
-                  width: 24,
-                  height: 24,
-                ),
-                title: Text(s.batteryHealth),
-                subtitle: const Text('SOH: 95%'),
-              ),
-            ),
-          ),
-          Semantics(
-            label: s.sagRisk,
-            child: Card(
-              child: ListTile(
-                leading: SvgPicture.asset(
-                  'assets/icons/sag_risk.svg',
-                  width: 24,
-                  height: 24,
-                ),
-                title: Text(s.sagRisk),
-                subtitle: const Text('Low'),
-              ),
-            ),
-          ),
-          Semantics(
-            label: s.escTemps,
-            child: Card(
-              child: ListTile(
-                leading: SvgPicture.asset(
-                  'assets/icons/esc_temp.svg',
-                  width: 24,
-                  height: 24,
-                ),
-                title: Text(s.escTemps),
-                subtitle: const Text('ETA 10m'),
-              ),
-            ),
-          ),
-          Semantics(
-            label: s.faultsLog,
-            child: Card(
-              child: ListTile(
-                leading: SvgPicture.asset(
-                  'assets/icons/fault.svg',
-                  width: 24,
-                  height: 24,
-                ),
-                title: Text(s.faultsLog),
-                subtitle: const Text('No recent faults'),
-              ),
-            ),
-          ),
-          Semantics(
-            label: s.maintenanceTips,
-            child: Card(
-              child: ListTile(
-                leading: SvgPicture.asset(
-                  'assets/icons/maintenance.svg',
-                  width: 24,
-                  height: 24,
-                ),
-                title: Text(s.maintenanceTips),
-                subtitle: const Text('Keep tires inflated.'),
-              ),
-            ),
-          ),
+          _card('assets/icons/battery.svg', s.batteryHealth, 'SOH: 95%'),
+          _card('assets/icons/sag_risk.svg', s.sagRisk, 'Low'),
+          _card('assets/icons/esc_temp.svg', s.escTemps, 'ETA 10m'),
+          _card('assets/icons/fault.svg', s.faultsLog, 'No recent faults'),
+          _card('assets/icons/maintenance.svg', s.maintenanceTips, 'Keep tires inflated.'),
         ],
+      ),
+    );
+  }
+
+  Widget _card(String asset, String title, String subtitle) {
+    return Semantics(
+      label: title,
+      child: Card(
+        child: ListTile(
+          leading: SvgPicture.asset(asset, width: 24, height: 24),
+          title: Text(title),
+          subtitle: Text(subtitle),
+        ),
       ),
     );
   }
